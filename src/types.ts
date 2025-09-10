@@ -11,12 +11,12 @@ export const BaseState = z.object({
 	dailyTimeLimit: Int({ example: 7200}).gte(-1).lt(86400),
 	todayTimeLimit: Int({ example: 7200 }).gte(-1).lt(86400),
 	usedTime: Int({ example: 0 }).gte(-1).lt(86400).optional(),
-	usageDate: Str({ example: "2024-01-15" })
-		.regex(/^\d{4}\-\d{2}\-\d{2}$/, { message: "Invalid date format, expected YYYY-MM-DD" }),
+	usageDate: Str({ example: "2024-01-15 +0:00" })
+		.regex(/^\d{4}\-\d{2}\-\d{2}( [+-]\d{2}:\d{2})?$/, { message: "Invalid date format, expected YYYY-MM-DD ∓hh:mm" }),
 	bedtime: Str({ example: "22:00:00" })
-		.regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/, { message: "Invalid time format, expected HH:MM" }),
+		.regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/, { message: "Invalid time format, expected hh:mm" }),
 	waketime: Str({ example: "22:00:00" })
-		.regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/, { message: "Invalid time format, expected HH:MM" }),
+		.regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/, { message: "Invalid time format, expected hh:mm" }),
 	graceGiven: Bool({ example: false }),
 	syncAuthor: Str().uuid(),
 })
