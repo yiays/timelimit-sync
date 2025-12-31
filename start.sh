@@ -1,3 +1,3 @@
 #!/bin/bash
 
-npx wrangler dev --port 8111
+npm run start

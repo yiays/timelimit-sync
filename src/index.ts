@@ -6,6 +6,11 @@ import { StateFetch } from "./endpoints/stateFetch";
 import { ClientAuthorize } from "./endpoints/clientAuthorize";
 import { ClientDeauthorize } from "./endpoints/clientDeauthorize";
 
+// Type for localKV
+type Env = {
+  [key: string]: any;
+};
+
 // Constants
 const API_VERSION = "2";
 
