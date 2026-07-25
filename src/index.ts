@@ -5,6 +5,7 @@ import { StateSync } from "./endpoints/stateSync";
 import { StateFetch } from "./endpoints/stateFetch";
 import { ClientAuthorize } from "./endpoints/clientAuthorize";
 import { ClientDeauthorize } from "./endpoints/clientDeauthorize";
+import { ClientUpdateCheck } from "./endpoints/clientUpdateCheck";
 
 // Type for localKV
 type Env = {
@@ -47,6 +48,7 @@ openapi.get("/api/get/:uuid", StateFetch);
 openapi.get("/api/auth/:uuid", ClientAuthorize);
 openapi.delete("/api/deauth/:uuid", ClientDeauthorize);
 openapi.post("/api/sync/:uuid", StateSync);
+openapi.get("/api/update", ClientUpdateCheck);
 
 openapi.registry.registerComponent('securitySchemes', 'authKey', {
   type: 'http',
