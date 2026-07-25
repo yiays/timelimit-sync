@@ -1,4 +1,4 @@
-import { Bool, OpenAPIRoute, Str } from "chanfana";
+import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
 import { type AppContext, SyncState, SecureState } from "../types";
 
@@ -11,7 +11,7 @@ export class StateFetch extends OpenAPIRoute {
     ],
 		request: {
 			params: z.object({
-				uuid: Str({ description: "Target client UUID" }).uuid(),
+				uuid: z.string().openapi({ description: "Target client UUID" }).uuid(),
 			}),
 		},
 		responses: {
@@ -28,7 +28,7 @@ export class StateFetch extends OpenAPIRoute {
 				content: {
 					"application/json": {
 						schema: z.object({
-							error: Str(),
+							error: z.string(),
 						}),
 					},
 				},
@@ -38,7 +38,7 @@ export class StateFetch extends OpenAPIRoute {
 				content: {
 					"application/json": {
 						schema: z.object({
-							error: Str(),
+							error: z.string(),
 						}),
 					},
 				},
@@ -76,7 +76,6 @@ export class StateFetch extends OpenAPIRoute {
 					usageDate: state.usageDate,
 					bedtime: state.bedtime,
 					waketime: state.waketime,
-					graceGiven: state.graceGiven,
 					syncAuthor: state.syncAuthor,
 				}
 			} else {

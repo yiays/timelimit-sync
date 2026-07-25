@@ -1,4 +1,4 @@
-import { Bool, OpenAPIRoute, Str } from "chanfana";
+import { OpenAPIRoute } from "chanfana";
 import { z, } from "zod";
 import { type AppContext, SecureState, SyncState } from "../types";
 
@@ -11,10 +11,10 @@ export class StateSync extends OpenAPIRoute {
     ],
 		request: {
 			params: z.object({
-				uuid: Str({ description: "Target client UUID" }).uuid(),
+				uuid: z.uuid().openapi({ description: "Target client UUID" }),
 			}),
 			query: z.object({
-				parentMode: z.coerce.boolean({
+				parentMode: z.coerce.boolean().openapi({
 					description: "Overrides values even if they are different from what you expected."
 				}).optional().default(false),
 			}),
@@ -32,7 +32,7 @@ export class StateSync extends OpenAPIRoute {
 				content: {
 					"application/json": {
 						schema: z.object({
-							accepted: Bool(),
+							accepted: z.boolean(),
 							delta: SyncState.partial().optional(),
 						}),
 					},
@@ -43,7 +43,7 @@ export class StateSync extends OpenAPIRoute {
 				content: {
 					"application/json": {
 						schema: z.object({
-							accepted: Bool(),
+							accepted: z.boolean(),
 							error: z.string(),
 						}),
 					},
@@ -103,7 +103,6 @@ export class StateSync extends OpenAPIRoute {
 							usageDate: oldState.usageDate,
 							bedtime: oldState.bedtime,
 							waketime: oldState.waketime,
-							graceGiven: oldState.graceGiven,
 							syncAuthor: oldState.syncAuthor,
 						}
 					}

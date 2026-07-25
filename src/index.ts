@@ -12,7 +12,7 @@ type Env = {
 };
 
 // Constants
-const API_VERSION = "2";
+const API_VERSION = "3";
 
 // Start a Hono app
 const app = new Hono<{ Bindings: Env }>({}).basePath("");

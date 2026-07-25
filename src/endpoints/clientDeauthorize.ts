@@ -1,4 +1,4 @@
-import { Bool, OpenAPIRoute, Str } from "chanfana";
+import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
 import { type AppContext, SecureState } from "../types";
 
@@ -11,7 +11,7 @@ export class ClientDeauthorize extends OpenAPIRoute {
     ],
     request: {
 			params: z.object({
-				uuid: Str({ description: "Target client UUID" }).uuid(),
+				uuid: z.string().openapi({ description: "Target client UUID" }).uuid(),
 			}),
     },
     responses: {
@@ -20,7 +20,7 @@ export class ClientDeauthorize extends OpenAPIRoute {
         content: {
           "application/json": {
             schema: z.object({
-              success: Bool(),
+              success: z.boolean(),
             })
           }
         }
@@ -30,8 +30,8 @@ export class ClientDeauthorize extends OpenAPIRoute {
 				content: {
 					"application/json": {
 						schema: z.object({
-              success: Bool(),
-              error: Str(),
+              success: z.boolean(),
+              error: z.string(),
 						}),
 					},
 				},
@@ -41,8 +41,8 @@ export class ClientDeauthorize extends OpenAPIRoute {
 				content: {
 					"application/json": {
 						schema: z.object({
-              success: Bool(),
-              error: Str(),
+              success: z.boolean(),
+              error: z.string(),
 						}),
 					},
 				},

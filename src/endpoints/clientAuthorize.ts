@@ -1,4 +1,4 @@
-import { Bool, OpenAPIRoute, Str } from "chanfana";
+import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
 import { type AppContext, SecureState } from "../types";
 import bcrypt from "bcryptjs";
@@ -9,10 +9,10 @@ export class ClientAuthorize extends OpenAPIRoute {
     summary: "Authorize a secondary client",
     request: {
 			params: z.object({
-				uuid: Str({ description: "Target client UUID" }).uuid(),
+				uuid: z.string().openapi({ description: "Target client UUID" }).uuid(),
 			}),
       query: z.object({
-        password: Str({description: "Client's password"}),
+        password: z.string().openapi({description: "Client's password"}),
       }),
     },
     responses: {
@@ -21,8 +21,8 @@ export class ClientAuthorize extends OpenAPIRoute {
         content: {
           "application/json": {
             schema: z.object({
-              success: Bool(),
-              authKey: Str(),
+              success: z.boolean(),
+              authKey: z.string(),
             })
           }
         }
@@ -32,8 +32,8 @@ export class ClientAuthorize extends OpenAPIRoute {
 				content: {
 					"application/json": {
 						schema: z.object({
-              success: Bool(),
-              error: Str(),
+              success: z.boolean(),
+              error: z.string(),
 						}),
 					},
 				},
@@ -43,8 +43,8 @@ export class ClientAuthorize extends OpenAPIRoute {
 				content: {
 					"application/json": {
 						schema: z.object({
-              success: Bool(),
-              error: Str(),
+              success: z.boolean(),
+              error: z.string(),
 						}),
 					},
 				},
