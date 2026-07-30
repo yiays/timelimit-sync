@@ -61,10 +61,16 @@ export class StateFetch extends OpenAPIRoute {
 			: authHeader;
 
 		// Retrieve state if it exists
-		let rawState: string | null = await c.env.timelimit.get(uuid);
+		let rawState: object | string | null = await c.env.timelimit.get(uuid);
 		if (rawState) {
 			// State exists
-			const state = secureStateType.parse(JSON.parse(rawState));
+			// TODO: remove this when all have been migrated
+			// Upgrade state to new storage medium
+			let state;
+			if(typeof rawState === 'string')
+				state = secureStateType.parse(JSON.parse(rawState));
+			else
+				state = secureStateType.parse(rawState);
 
 			// Check if the client is authenticated
 			if (authKey && state.authKeys.includes(authKey)) {

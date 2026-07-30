@@ -64,10 +64,16 @@ export class ClientAuthorize extends OpenAPIRoute {
     const { password } = data.query;
 
     // Retrieve state if it exists
-    let rawState: string | null = await c.env.timelimit.get(uuid);
+    let rawState: object | string | null = await c.env.timelimit.get(uuid);
 		if (rawState) {
 			// State exists
-			const state = secureStateType.parse(JSON.parse(rawState));
+			// TODO: remove this when all have been migrated
+			// Upgrade state to new storage medium
+			let state;
+			if(typeof rawState === 'string')
+				state = secureStateType.parse(JSON.parse(rawState));
+			else
+				state = secureStateType.parse(rawState);
 
       // Validate password
       if(await bcrypt.compare(password, state.hashedPassword)) {
@@ -76,7 +82,7 @@ export class ClientAuthorize extends OpenAPIRoute {
           ...state,
           authKeys: [...state.authKeys, newAuthKey],
         };
-        await c.env.timelimit.put(uuid, JSON.stringify(newState));
+        await c.env.timelimit.put(uuid, newState);
         
         return c.json({
           success: true,

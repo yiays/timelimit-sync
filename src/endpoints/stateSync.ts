@@ -71,10 +71,16 @@ export class StateSync extends OpenAPIRoute {
 		const secureStateType = z.object(SecureState.shape);
 		
 		// Retrieve existing state
-		let rawState: string | null = await c.env.timelimit.get(uuid);
+		let rawState: object | string | null = await c.env.timelimit.get(uuid);
 		if (rawState) {
 			// State exists
-			const oldState = secureStateType.parse(JSON.parse(rawState));
+			// TODO: remove this when all have been migrated
+			// Upgrade state to new storage medium
+			let oldState;
+			if(typeof rawState === 'string')
+				oldState = secureStateType.parse(JSON.parse(rawState));
+			else
+				oldState = secureStateType.parse(rawState);
 
 			// Check if the client is authenticated
 			if (authKey && oldState.authKeys.includes(authKey)) {
@@ -86,7 +92,7 @@ export class StateSync extends OpenAPIRoute {
 						...newState,
 						syncAuthor: authKey,
 					}
-					await c.env.timelimit.put(uuid, JSON.stringify(state));
+					await c.env.timelimit.put(uuid, state);
 
 					// Inform client the changes were accepted
 					return {
@@ -122,7 +128,7 @@ export class StateSync extends OpenAPIRoute {
 				authKeys: [newAuthKey],
 				syncAuthor: newAuthKey,
 			}
-			await c.env.timelimit.put(uuid, JSON.stringify(state));
+			await c.env.timelimit.put(uuid, state);
 
 			// return the created State
 			return {
