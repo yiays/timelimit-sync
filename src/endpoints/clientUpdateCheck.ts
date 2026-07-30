@@ -4,7 +4,7 @@ import { type AppContext } from "../types";
 
 export class ClientUpdateCheck extends OpenAPIRoute {
   schema = {
-    tags: [],
+    tags: ['TimeLimitApi'],
     summary: "Provide information about the latest release",
     request: {},
     responses: {

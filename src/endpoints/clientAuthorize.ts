@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 
 export class ClientAuthorize extends OpenAPIRoute {
   schema = {
-    tags: [],
+    tags: ['TimeLimitApi'],
     summary: "Authorize a secondary client",
     request: {
 			params: z.object({

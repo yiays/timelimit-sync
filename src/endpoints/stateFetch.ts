@@ -4,7 +4,7 @@ import { type AppContext, SyncState, SecureState } from "../types";
 
 export class StateFetch extends OpenAPIRoute {
 	schema = {
-		tags: [],
+		tags: ['TimeLimitApi'],
 		summary: "Get a client's state by uuid",
     security: [
       { authKey: [] }

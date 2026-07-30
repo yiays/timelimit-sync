@@ -4,7 +4,7 @@ import { type AppContext, SecureState } from "../types";
 
 export class ClientDeauthorize extends OpenAPIRoute {
   schema = {
-    tags: [],
+    tags: ['TimeLimitApi'],
     summary: "Deauthorize all clients and delete stored data",
     security: [
       { authKey: [] }

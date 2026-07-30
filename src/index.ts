@@ -33,7 +33,7 @@ app.use("*", async (c, next) => {
 app.use("*", cors({
   origin: "http://localhost:8081",
   allowMethods: ["GET", "POST", "DELETE"],
-  allowHeaders: ["Authorization", "Content-Type"]
+  allowHeaders: ["Authorization", "Content-Type", "User-Agent"]
 }));
 
 // Stats gathering
@@ -72,7 +72,13 @@ const openapi = fromHono(app, {
       title: "Timelimit Sync API",
       description: "API for managing device usage limits in the TimeLimit apps",
       version: API_VERSION,
-    }
+    },
+    tags: [
+      {
+        name: 'TimeLimitApi',
+        description: "Manage time limits, downtime, and other rules for AutoLogout clients"
+      }
+    ]
   },
 });
 

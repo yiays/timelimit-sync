@@ -35,9 +35,7 @@ export const BaseState = z.object({
 export const SyncState = z.object({
 	...BaseState.shape,
 	hashedPassword: BaseState.shape.hashedPassword.optional(),
-	syncAuthor: BaseState.shape.syncAuthor.optional().nullable(),
-	clientVersion: BaseState.shape.clientVersion.optional(),
-	clientOS: BaseState.shape.clientOS.optional(),
+	syncAuthor: BaseState.shape.syncAuthor.optional().nullable()
 });
 
 // States including security information that is kept on the server

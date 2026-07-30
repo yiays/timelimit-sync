@@ -4,7 +4,7 @@ import { type AppContext, SecureState, SyncState } from "../types";
 
 export class StateSync extends OpenAPIRoute {
 	schema = {
-		tags: [],
+		tags: ['TimeLimitApi'],
 		summary: "Create or update the client's state",
     security: [
       { authKey: [] }
