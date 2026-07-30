@@ -53,6 +53,19 @@ export class StateSync extends OpenAPIRoute {
 	};
 
 	async handle(c: AppContext) {
+		// Get request userAgent data
+		const userAgent = c.req.header('User-Agent');
+		const userAgentTest = /AutoLogoutClient\/(\d)(?: \((AutoLogout[\w-]*) ([\d.]+)\) \((.+)\))?/;
+		const uaTestResult = userAgentTest.exec(userAgent);
+
+		let clientVersion = '0.0.0';
+		let os = 'unknown';
+		let api_version:string, client:string = null;
+		if(uaTestResult[2] === undefined)
+			[ , api_version ] = uaTestResult;
+		else
+			[ , api_version, client, clientVersion, os ] = uaTestResult;
+
 		// Get validated data
 		const data = await this.getValidatedData<typeof this.schema>();
 
@@ -91,7 +104,14 @@ export class StateSync extends OpenAPIRoute {
 						...oldState,
 						...newState,
 						syncAuthor: authKey,
+						clientOS: os
 					}
+					if(client == 'AutoLogout') state.clientVersion = clientVersion;
+
+					//COMPAT: AutoLogout 1.0.0 is currently up to date, but doesn't provide a complete UA
+					// This can be removed when 1.0.0 is no longer the latest release
+					else if(client === null && api_version == '3') state.clientVersion = '1.0.0';
+
 					await c.env.timelimit.put(uuid, state);
 
 					// Inform client the changes were accepted

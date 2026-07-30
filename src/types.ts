@@ -27,6 +27,8 @@ export const BaseState = z.object({
 		.openapi({ example: "22:00:00" })
 		.regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/, { message: "Invalid time format, expected hh:mm" }),
 	syncAuthor: z.uuid(),
+	clientVersion: z.string().default('0.0.0'),
+	clientOS: z.string().default('unknown'),
 })
 
 // States when syncing with the client
@@ -34,10 +36,16 @@ export const SyncState = z.object({
 	...BaseState.shape,
 	hashedPassword: BaseState.shape.hashedPassword.optional(),
 	syncAuthor: BaseState.shape.syncAuthor.optional().nullable(),
+	clientVersion: BaseState.shape.clientVersion.optional(),
+	clientOS: BaseState.shape.clientOS.optional(),
 });
 
 // States including security information that is kept on the server
 export const SecureState = z.object({
 	...BaseState.shape,
 	authKeys: z.array(z.uuid()).default([]),
+});
+
+export const Stats = z.object({
+	activeUserAgents: z.record(z.string(), z.coerce.date()).default({})
 });

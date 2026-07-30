@@ -1,4 +1,5 @@
 import { fromHono } from "chanfana";
+import { z, } from "zod";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { StateSync } from "./endpoints/stateSync";
@@ -6,6 +7,10 @@ import { StateFetch } from "./endpoints/stateFetch";
 import { ClientAuthorize } from "./endpoints/clientAuthorize";
 import { ClientDeauthorize } from "./endpoints/clientDeauthorize";
 import { ClientUpdateCheck } from "./endpoints/clientUpdateCheck";
+import { Stats } from "./types";
+
+// Define the stats type once globally as this will be accessed frequently
+const statsType = z.object(Stats.shape);
 
 // Type for localKV
 type Env = {
@@ -30,6 +35,34 @@ app.use("*", cors({
   allowMethods: ["GET", "POST", "DELETE"],
   allowHeaders: ["Authorization", "Content-Type"]
 }));
+
+// Stats gathering
+app.use("/api/*", async (c, next) => {
+  await next();
+
+  // Get the userAgent
+  const userAgent = c.req.header('User-Agent');
+  if(!userAgent.startsWith('AutoLogout')) return;
+  // Record it in stats
+  const rawStats = await c.env.timelimit.get('stats');
+  const oldStats = statsType.parse(rawStats? rawStats: {});
+  // Restrict updates to once daily to save writes
+  let yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  if(
+    userAgent in oldStats.activeUserAgents && oldStats.activeUserAgents[userAgent] < yesterday
+    || !(userAgent in oldStats.activeUserAgents)
+  ) {
+    const newStats = {
+      ...oldStats,
+      activeUserAgents: {
+        ...oldStats.activeUserAgents,
+        [userAgent]: new Date()
+      }
+    }
+    await c.env.timelimit.put('stats', newStats);
+  }
+});
 
 // Setup OpenAPI registry
 const openapi = fromHono(app, {
