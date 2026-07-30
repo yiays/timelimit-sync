@@ -83,6 +83,8 @@ export class StateFetch extends OpenAPIRoute {
 					bedtime: state.bedtime,
 					waketime: state.waketime,
 					syncAuthor: state.syncAuthor,
+					clientVersion: state.clientVersion,
+					clientOS: state.clientOS,
 				}
 			} else {
 				return c.json({
