@@ -99,14 +99,28 @@ export class StateSync extends OpenAPIRoute {
 			if (authKey && oldState.authKeys.includes(authKey)) {
 				if(parentMode || [authKey, syncAuthor].includes(oldState.syncAuthor)) {
 					// Client already knows or doesn't need to know about old state
+
 					// Update existing state
 					const state = {
 						...oldState,
-						...newState,
-						syncAuthor: authKey,
-						clientOS: os
+						...{
+							// Specify exactly which parameters can be changed by a client
+							dailyTimeLimit: newState.dailyTimeLimit,
+							todayTimeLimit: newState.todayTimeLimit,
+							usedTime: newState.usedTime,
+							usageDate: newState.usageDate,
+							usage: newState.usage,
+							bedtime: newState.bedtime,
+							waketime: newState.waketime
+						},
+						syncAuthor: authKey
 					}
-					if(client == 'AutoLogout') state.clientVersion = clientVersion;
+					if(client == 'AutoLogout') {
+						// Only the primary client can change these parameters
+						if(newState.hashedPassword) state.hashedPassword = newState.hashedPassword;
+						state.clientVersion = clientVersion;
+						state.os = os;
+					}
 
 					//COMPAT: AutoLogout 1.0.0 is currently up to date, but doesn't provide a complete UA
 					// This can be removed when 1.0.0 is no longer the latest release
@@ -120,13 +134,12 @@ export class StateSync extends OpenAPIRoute {
 					}
 				} else {
 					// Client is not yet aware of changes made by another client
+					// Only send parameters that are allowed to be changed remotely
 					return {
 						accepted: false,
 						delta: {
 							dailyTimeLimit: oldState.dailyTimeLimit,
 							todayTimeLimit: oldState.todayTimeLimit,
-							usedTime: oldState.usedTime,
-							usageDate: oldState.usageDate,
 							bedtime: oldState.bedtime,
 							waketime: oldState.waketime,
 							syncAuthor: oldState.syncAuthor,
@@ -150,7 +163,7 @@ export class StateSync extends OpenAPIRoute {
 			}
 			await c.env.timelimit.put(uuid, state);
 
-			// return the created State
+			// return the created AuthKey
 			return {
 				accepted: true,
 				delta: {

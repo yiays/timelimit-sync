@@ -20,6 +20,12 @@ export const BaseState = z.object({
 	usageDate: z.string()
 		.openapi({ example: "2024-01-15 +0:00" })
 		.regex(/^\d{4}\-\d{2}\-\d{2}( [+-]\d{1,2}:\d{2})?$/, { message: "Invalid date format, expected YYYY-MM-DD ∓hh:mm" }),
+	usage: z.record(z.string().regex(/^\d{4}\-\d{2}\-\d{2}/, {message: "Invalid date format, expected YYYY-MM-DD"}), z.record(z.string(), z.object({
+		names: z.array(z.string()),
+		usedTime: z.number()
+	})))
+		.openapi({example: {"2024-01-15": {'edge.exe': {names: ['YouTube', 'Google', 'Bunnies - Google Images'], usedTime: 15.5}}}})
+		.optional(),
 	bedtime: z.string()
 		.openapi({ example: "22:00:00" })
 		.regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/, { message: "Invalid time format, expected hh:mm" }),

@@ -80,6 +80,7 @@ export class StateFetch extends OpenAPIRoute {
 					todayTimeLimit: state.todayTimeLimit,
 					usedTime: state.usedTime,
 					usageDate: state.usageDate,
+					usage: state.usage,
 					bedtime: state.bedtime,
 					waketime: state.waketime,
 					syncAuthor: state.syncAuthor,
