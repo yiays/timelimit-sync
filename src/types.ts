@@ -22,7 +22,7 @@ export const BaseState = z.object({
 		.regex(/^\d{4}\-\d{2}\-\d{2}( [+-]\d{1,2}:\d{2})?$/, { message: "Invalid date format, expected YYYY-MM-DD ∓hh:mm" }),
 	usage: z.record(z.string().regex(/^\d{4}\-\d{2}\-\d{2}/, {message: "Invalid date format, expected YYYY-MM-DD"}), z.record(z.string(), z.object({
 		names: z.array(z.string()),
-		usedTime: z.number()
+		usedTime: z.number().int()
 	})))
 		.openapi({example: {"2024-01-15": {'edge.exe': {names: ['YouTube', 'Google', 'Bunnies - Google Images'], usedTime: 15.5}}}})
 		.optional(),
