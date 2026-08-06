@@ -20,11 +20,15 @@ export const BaseState = z.object({
 	usageDate: z.string()
 		.openapi({ example: "2024-01-15 +0:00" })
 		.regex(/^\d{4}\-\d{2}\-\d{2}( [+-]\d{1,2}:\d{2})?$/, { message: "Invalid date format, expected YYYY-MM-DD ∓hh:mm" }),
-	usage: z.record(z.string().regex(/^\d{4}\-\d{2}\-\d{2}/, {message: "Invalid date format, expected YYYY-MM-DD"}), z.record(z.string(), z.object({
-		names: z.array(z.string()),
-		usedTime: z.number().int()
-	})))
-		.openapi({example: {"2024-01-15": {'edge.exe': {names: ['YouTube', 'Google', 'Bunnies - Google Images'], usedTime: 15.5}}}})
+	usage: z.record(z.string().regex(/^\d{4}\-\d{2}\-\d{2}/, {message: "Invalid date format, expected YYYY-MM-DD"}),
+		z.object({
+			totalUsage: z.number().int().optional(),
+			entries: z.record(z.string(), z.object({
+				names: z.array(z.string()),
+				usedTime: z.number().int()
+			})).optional()
+		}))
+		.openapi({example: {"2024-01-15": {totalTime: 200,'edge.exe': {names: ['YouTube', 'Google', 'Bunnies - Google Images'], usedTime: 150}}}})
 		.optional(),
 	bedtime: z.string()
 		.openapi({ example: "22:00:00" })

@@ -119,7 +119,7 @@ export class StateSync extends OpenAPIRoute {
 						// Only the primary client can change these parameters
 						if(newState.hashedPassword) state.hashedPassword = newState.hashedPassword;
 						state.clientVersion = clientVersion;
-						state.os = os;
+						state.clientOS = os;
 					}
 
 					//COMPAT: AutoLogout 1.0.0 is currently up to date, but doesn't provide a complete UA
